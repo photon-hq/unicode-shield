@@ -1,0 +1,37 @@
+services:
+  shield-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT:-3001}:3001"
+    environment:
+      - PORT=3001
+      - REDIS_URL=redis://redis:6379
+      - SHIELD_SECRET=${SHIELD_SECRET:-change-me-in-production}
+      - CHALLENGE_BASE_URL=${CHALLENGE_BASE_URL:-https://verify.photon.codes}
+      - CHALLENGE_TTL_SECONDS=${CHALLENGE_TTL_SECONDS:-120}
+      - VERIFICATION_TTL_SECONDS=${VERIFICATION_TTL_SECONDS:-604800}
+      - SHIELD_DEV=${SHIELD_DEV:-false}
+      - PHOTON_BACKEND_URL=${PHOTON_BACKEND_URL:-}
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  redis-data:

@@ -1,0 +1,10 @@
+node_modules
+.git
+.github
+.firecrawl
+.cursor
+.env
+.env.*
+!.env.example
+*.md
+.DS_Store

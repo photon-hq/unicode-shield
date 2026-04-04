@@ -1,0 +1,27 @@
+{
+  "name": "@photon-ai/shield",
+  "version": "1.0.0",
+  "module": "src/server/index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --hot src/server/index.ts",
+    "probe": "bun run --hot src/probe/index.ts",
+    "start": "bun run src/server/index.ts",
+    "test:send": "bun run src/probe/send-test.ts",
+    "test": "bun run src/test-integration.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^25.5.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@photon-ai/advanced-imessage-kit": "^1.14.3",
+    "hono": "^4.12.10",
+    "ioredis": "^5.10.1",
+    "nanoid": "^5.1.7"
+  }
+}
