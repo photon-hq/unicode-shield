@@ -43,7 +43,6 @@ export function strip(input: string, options: StripOptions): StripResult {
     const cp = input.codePointAt(i)!;
     const charLen = cp > 0xffff ? 2 : 1;
 
-    // ── Invisible characters ───────────────────────────────────────────
     if (options.invisibles) {
       const entry = INVISIBLE_CODEPOINTS.get(cp);
       if (entry) {
@@ -60,7 +59,6 @@ export function strip(input: string, options: StripOptions): StripResult {
       }
     }
 
-    // ── Special whitespace → ASCII space ───────────────────────────────
     if (options.normalizeWhitespace) {
       const entry = SPECIAL_SPACE_CODEPOINTS.get(cp);
       if (entry) {
@@ -78,7 +76,6 @@ export function strip(input: string, options: StripOptions): StripResult {
       }
     }
 
-    // ── Line/paragraph separators ──────────────────────────────────────
     if (options.separators) {
       const entry = SEPARATOR_CODEPOINTS.get(cp);
       if (entry) {
@@ -95,7 +92,6 @@ export function strip(input: string, options: StripOptions): StripResult {
       }
     }
 
-    // ── C0 control characters (preserve \t \n \r) ─────────────────────
     if (options.controls && isStrippableC0(cp)) {
       findings.push({
         type: "control",
@@ -109,7 +105,6 @@ export function strip(input: string, options: StripOptions): StripResult {
       continue;
     }
 
-    // ── C1 control characters ──────────────────────────────────────────
     if (options.controls && isC1Control(cp)) {
       findings.push({
         type: "control",
@@ -123,7 +118,6 @@ export function strip(input: string, options: StripOptions): StripResult {
       continue;
     }
 
-    // ── Tag characters (U+E0000-U+E007F) ──────────────────────────────
     if (options.tags && isTagCharacter(cp)) {
       const decoded = getTagCharDecoded(cp);
       findings.push({
@@ -133,15 +127,12 @@ export function strip(input: string, options: StripOptions): StripResult {
         name: getTagCharName(cp),
         action: "stripped",
       });
-      // Tag characters encode hidden ASCII -- we strip them entirely
-      // but the decoded content is available via the name field
       void decoded;
       i += charLen;
       offset++;
       continue;
     }
 
-    // ── Variation selectors ────────────────────────────────────────────
     if (options.variationSelectors && isVariationSelector(cp)) {
       findings.push({
         type: "variation-selector",
@@ -155,7 +146,6 @@ export function strip(input: string, options: StripOptions): StripResult {
       continue;
     }
 
-    // ── Musical formatting ─────────────────────────────────────────────
     if (options.formatting && isMusicalFormatting(cp)) {
       findings.push({
         type: "formatting",
@@ -169,7 +159,6 @@ export function strip(input: string, options: StripOptions): StripResult {
       continue;
     }
 
-    // ── Shorthand format controls ──────────────────────────────────────
     if (options.formatting && isShorthandControl(cp)) {
       findings.push({
         type: "formatting",
@@ -183,7 +172,6 @@ export function strip(input: string, options: StripOptions): StripResult {
       continue;
     }
 
-    // ── Annotation, deprecated formatting, non-characters ──────────────
     if (options.formatting) {
       const entry = FORMATTING_CODEPOINTS.get(cp);
       if (entry) {
@@ -200,7 +188,6 @@ export function strip(input: string, options: StripOptions): StripResult {
       }
     }
 
-    // ── Pass through ───────────────────────────────────────────────────
     result += input.slice(i, i + charLen);
     i += charLen;
     offset++;

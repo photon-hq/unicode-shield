@@ -5,7 +5,6 @@ export interface ConfusablesResult {
   findings: Finding[];
 }
 
-// Cyrillic → Latin confusables (most dangerous: visually identical)
 const CYRILLIC_TO_LATIN = new Map<number, [string, string]>([
   [0x0430, ["a", "CYRILLIC_SMALL_A"]],
   [0x0410, ["A", "CYRILLIC_CAPITAL_A"]],
@@ -38,7 +37,6 @@ const CYRILLIC_TO_LATIN = new Map<number, [string, string]>([
   [0x0422, ["T", "CYRILLIC_CAPITAL_TE"]],
 ]);
 
-// Greek → Latin confusables
 const GREEK_TO_LATIN = new Map<number, [string, string]>([
   [0x03bf, ["o", "GREEK_SMALL_OMICRON"]],
   [0x039f, ["O", "GREEK_CAPITAL_OMICRON"]],
@@ -63,7 +61,6 @@ const GREEK_TO_LATIN = new Map<number, [string, string]>([
   [0x0396, ["Z", "GREEK_CAPITAL_ZETA"]],
 ]);
 
-// Armenian → Latin confusables
 const ARMENIAN_TO_LATIN = new Map<number, [string, string]>([
   [0x0570, ["h", "ARMENIAN_SMALL_HO"]],
   [0x0578, ["n", "ARMENIAN_SMALL_VO"]],
@@ -71,7 +68,6 @@ const ARMENIAN_TO_LATIN = new Map<number, [string, string]>([
   [0x0585, ["o", "ARMENIAN_SMALL_OH"]],
 ]);
 
-// Cherokee → Latin confusables (uppercase lookalikes)
 const CHEROKEE_TO_LATIN = new Map<number, [string, string]>([
   [0x13aa, ["A", "CHEROKEE_GO"]],
   [0x13a9, ["D", "CHEROKEE_GI"]],

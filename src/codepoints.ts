@@ -5,8 +5,6 @@ interface CodepointEntry {
   type: FindingType;
 }
 
-// ── Zero-width and invisible characters ──────────────────────────────────────
-
 export const INVISIBLE_CODEPOINTS = new Map<number, CodepointEntry>([
   [0x200b, { name: "ZERO_WIDTH_SPACE", type: "invisible" }],
   [0x200c, { name: "ZERO_WIDTH_NON_JOINER", type: "invisible" }],
@@ -36,8 +34,6 @@ export const INVISIBLE_CODEPOINTS = new Map<number, CodepointEntry>([
   [0x2800, { name: "BRAILLE_PATTERN_BLANK", type: "invisible" }],
 ]);
 
-// ── Bidi control characters ──────────────────────────────────────────────────
-
 export const BIDI_CODEPOINTS = new Map<number, CodepointEntry>([
   [0x202a, { name: "LEFT_TO_RIGHT_EMBEDDING", type: "bidi" }],
   [0x202b, { name: "RIGHT_TO_LEFT_EMBEDDING", type: "bidi" }],
@@ -49,8 +45,6 @@ export const BIDI_CODEPOINTS = new Map<number, CodepointEntry>([
   [0x2068, { name: "FIRST_STRONG_ISOLATE", type: "bidi" }],
   [0x2069, { name: "POP_DIRECTIONAL_ISOLATE", type: "bidi" }],
 ]);
-
-// ── Special whitespace (normalized to ASCII space U+0020) ────────────────────
 
 export const SPECIAL_SPACE_CODEPOINTS = new Map<number, CodepointEntry>([
   [0x00a0, { name: "NO_BREAK_SPACE", type: "special-space" }],
@@ -71,14 +65,10 @@ export const SPECIAL_SPACE_CODEPOINTS = new Map<number, CodepointEntry>([
   [0x3000, { name: "IDEOGRAPHIC_SPACE", type: "special-space" }],
 ]);
 
-// ── Line / paragraph separators ──────────────────────────────────────────────
-
 export const SEPARATOR_CODEPOINTS = new Map<number, CodepointEntry>([
   [0x2028, { name: "LINE_SEPARATOR", type: "separator" }],
   [0x2029, { name: "PARAGRAPH_SEPARATOR", type: "separator" }],
 ]);
-
-// ── Annotation, deprecated formatting, object replacement, non-characters ────
 
 export const FORMATTING_CODEPOINTS = new Map<number, CodepointEntry>([
   [0xfff9, { name: "INTERLINEAR_ANNOTATION_ANCHOR", type: "formatting" }],
@@ -95,8 +85,6 @@ export const FORMATTING_CODEPOINTS = new Map<number, CodepointEntry>([
   [0xfffe, { name: "NON_CHARACTER_FFFE", type: "non-character" }],
   [0xffff, { name: "NON_CHARACTER_FFFF", type: "non-character" }],
 ]);
-
-// ── Range-based lookups (too many individual entries for a Map) ───────────────
 
 export function isC0Control(cp: number): boolean {
   return (cp >= 0x0000 && cp <= 0x001f) || cp === 0x007f;
@@ -155,7 +143,6 @@ const C0_NAMES: Record<number, string> = {
   0x7f: "DELETE",
 };
 
-// Preserve tab (\t = 0x09), newline (\n = 0x0A), carriage return (\r = 0x0D)
 const C0_SAFE = new Set([0x09, 0x0a, 0x0d]);
 
 export function isStrippableC0(cp: number): boolean {

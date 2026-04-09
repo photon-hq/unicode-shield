@@ -30,7 +30,6 @@ export function processBidi(input: string, mode: BidiMode): BidiResult {
           action: "stripped",
         });
       } else {
-        // escape: replace with [U+XXXX] placeholder
         const escaped = `[U+${cp.toString(16).toUpperCase().padStart(4, "0")}]`;
         result += escaped;
         findings.push({

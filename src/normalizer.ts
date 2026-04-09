@@ -31,12 +31,9 @@ function runPipeline(text: string, opts: Required<ShieldOptions>): AnalyzeResult
     return { text: "", dirty: false, findings: [] };
   }
 
-  // Step 1: NFKC normalization (fullwidth, math alphanumeric, enclosed, super/subscript)
-  // Must run before character-level stripping so collapsed forms get caught
+  // NFKC runs first so collapsed forms get caught by subsequent steps
   const nfkcResult = processNfkc(text, opts.nfkc);
 
-  // Step 2: strip invisible chars, controls, tags, variation selectors,
-  //         normalize whitespace, strip separators, strip formatting
   const stripResult = strip(nfkcResult.text, {
     invisibles: opts.invisibles,
     controls: opts.controls,
@@ -47,16 +44,10 @@ function runPipeline(text: string, opts: Required<ShieldOptions>): AnalyzeResult
     formatting: opts.formatting,
   });
 
-  // Step 3: handle bidi control characters
   const bidiResult = processBidi(stripResult.text, opts.bidi);
-
-  // Step 4: limit stacked combining marks (Zalgo text)
   const diacriticsResult = processDiacritics(bidiResult.text, opts.diacritics);
-
-  // Step 5: normalize confusable homoglyphs
   const confusablesResult = processConfusables(diacriticsResult.text, opts.confusables);
 
-  // Step 6: collapse whitespace and trim (post-processing)
   let finalText = confusablesResult.text;
   if (opts.collapseWhitespace) {
     finalText = finalText

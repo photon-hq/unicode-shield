@@ -46,7 +46,6 @@ export function processNfkc(input: string, enabled: boolean): NfkcResult {
   const findings: Finding[] = [];
   let needsNormalization = false;
 
-  // First pass: check if any NFKC-relevant chars exist (fast path)
   for (let i = 0; i < input.length; ) {
     const cp = input.codePointAt(i)!;
     const charLen = cp > 0xffff ? 2 : 1;
@@ -61,7 +60,6 @@ export function processNfkc(input: string, enabled: boolean): NfkcResult {
     return { text: input, findings: [] };
   }
 
-  // Collect findings from original before normalization
   let offset = 0;
   for (let i = 0; i < input.length; ) {
     const cp = input.codePointAt(i)!;
