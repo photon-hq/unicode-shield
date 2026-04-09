@@ -1,27 +1,51 @@
 {
-  "name": "@photon-ai/shield",
-  "version": "1.0.0",
-  "module": "src/server/index.ts",
+  "name": "@photon-ai/unicode-shield",
+  "version": "0.1.0",
+  "description": "Unicode normalization layer — strips invisible characters and neutralizes bidirectional text attacks",
   "type": "module",
-  "private": true,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "dev": "bun run --hot src/server/index.ts",
-    "probe": "bun run --hot src/probe/index.ts",
-    "start": "bun run src/server/index.ts",
-    "test:send": "bun run src/probe/send-test.ts",
-    "test": "bun run src/test-integration.ts"
+    "build": "tsup",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "unicode",
+    "normalization",
+    "invisible-characters",
+    "bidi",
+    "security",
+    "imessage",
+    "text-sanitization",
+    "zero-width"
+  ],
+  "author": "Photon <daniel@photon.codes>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/photon-hq/unicode-shield.git"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/node": "^25.5.2"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "dependencies": {
-    "@photon-ai/advanced-imessage-kit": "^1.14.3",
-    "hono": "^4.12.10",
-    "ioredis": "^5.10.1",
-    "nanoid": "^5.1.7"
+    "tsup": "^8.4.0",
+    "typescript": "^5.7.0"
   }
 }
