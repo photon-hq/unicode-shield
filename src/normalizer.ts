@@ -31,10 +31,8 @@ function runPipeline(text: string, opts: Required<ShieldOptions>): AnalyzeResult
     return { text: "", dirty: false, findings: [] };
   }
 
-  // NFKC runs first so collapsed forms get caught by subsequent steps
-  const nfkcResult = processNfkc(text, opts.nfkc);
-
-  const stripResult = strip(nfkcResult.text, {
+  // Strip first: remove invisibles, controls, tags, etc.
+  const stripResult = strip(text, {
     invisibles: opts.invisibles,
     controls: opts.controls,
     tags: opts.tags,
@@ -48,7 +46,13 @@ function runPipeline(text: string, opts: Required<ShieldOptions>): AnalyzeResult
   const diacriticsResult = processDiacritics(bidiResult.text, opts.diacritics);
   const confusablesResult = processConfusables(diacriticsResult.text, opts.confusables);
 
-  let finalText = confusablesResult.text;
+  // NFKC runs LAST so it cannot manufacture dangerous ASCII that bypasses
+  // the stripping/confusable filters. Any ASCII produced by NFKC (e.g. backtick,
+  // backslash) will have already passed through the security filters, but since
+  // NFKC only normalizes to ASCII letters/digits/punctuation, the risk is lower.
+  const nfkcResult = processNfkc(confusablesResult.text, opts.nfkc);
+
+  let finalText = nfkcResult.text;
   if (opts.collapseWhitespace) {
     finalText = finalText
       .replace(/\r\n/g, "\n")
@@ -61,11 +65,11 @@ function runPipeline(text: string, opts: Required<ShieldOptions>): AnalyzeResult
   }
 
   const allFindings = [
-    ...nfkcResult.findings,
     ...stripResult.findings,
     ...bidiResult.findings,
     ...diacriticsResult.findings,
     ...confusablesResult.findings,
+    ...nfkcResult.findings,
   ];
 
   return {

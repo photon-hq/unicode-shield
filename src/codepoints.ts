@@ -82,9 +82,32 @@ export const FORMATTING_CODEPOINTS = new Map<number, CodepointEntry>([
   [0x206f, { name: "NOMINAL_DIGIT_SHAPES", type: "formatting" }],
   [0xfffc, { name: "OBJECT_REPLACEMENT_CHARACTER", type: "formatting" }],
   [0xfffd, { name: "REPLACEMENT_CHARACTER", type: "formatting" }],
+  // Non-characters: U+FFFE, U+FFFF (BMP)
   [0xfffe, { name: "NON_CHARACTER_FFFE", type: "non-character" }],
   [0xffff, { name: "NON_CHARACTER_FFFF", type: "non-character" }],
 ]);
+
+// Add Arabic non-characters: U+FDD0..U+FDEF (32 codepoints)
+for (let i = 0; i < 32; i++) {
+  const cp = 0xfdd0 + i;
+  FORMATTING_CODEPOINTS.set(cp, {
+    name: `NON_CHARACTER_FDD${i.toString(16).toUpperCase().padStart(2, "0")}`,
+    type: "non-character",
+  });
+}
+
+// Add plane-final non-characters: U+1FFFE, U+1FFFF, ..., U+10FFFE, U+10FFFF (17 planes × 2 = 34 codepoints)
+for (let plane = 0; plane < 17; plane++) {
+  const base = (plane + 1) * 0x10000;
+  FORMATTING_CODEPOINTS.set(base - 2, {
+    name: `NON_CHARACTER_${(base - 2).toString(16).toUpperCase()}`,
+    type: "non-character",
+  });
+  FORMATTING_CODEPOINTS.set(base - 1, {
+    name: `NON_CHARACTER_${(base - 1).toString(16).toUpperCase()}`,
+    type: "non-character",
+  });
+}
 
 export function isC0Control(cp: number): boolean {
   return (cp >= 0x0000 && cp <= 0x001f) || cp === 0x007f;

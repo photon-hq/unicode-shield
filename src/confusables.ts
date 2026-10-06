@@ -42,7 +42,7 @@ const GREEK_TO_LATIN = new Map<number, [string, string]>([
   [0x039f, ["O", "GREEK_CAPITAL_OMICRON"]],
   [0x03b1, ["a", "GREEK_SMALL_ALPHA"]],
   [0x0391, ["A", "GREEK_CAPITAL_ALPHA"]],
-  [0x03b2, ["B", "GREEK_SMALL_BETA"]],
+  [0x03b2, ["b", "GREEK_SMALL_BETA"]],
   [0x0392, ["B", "GREEK_CAPITAL_BETA"]],
   [0x03b5, ["e", "GREEK_SMALL_EPSILON"]],
   [0x0395, ["E", "GREEK_CAPITAL_EPSILON"]],
